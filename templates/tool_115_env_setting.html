@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+{{ macros.m_button_group([['globalSettingSaveBtn', '설정 저장']])}}
+{{ macros.m_row_start('5') }}
+{{ macros.m_row_end() }}
+
+<form id='setting'>
+{{ macros.setting_input_textarea_and_buttons('env_cookie', '115 Cookie', [['test_btn', '테스트']], col='10', row='3', value=arg['env_cookie'], desc=None) }}
+</form>
+
+<script type="text/javascript">
+$("body").on('click', '#test_btn', function(e){
+  e.preventDefault();
+  globalSendCommand('test', $("#env_cookie").val());
+});
+</script>    
+{% endblock %}
+

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+{{ macros.m_button_group([['globalSettingSaveBtn', '설정 저장']])}}
+{{ macros.m_row_start('5') }}
+{{ macros.m_row_end() }}
+
+<nav>  
+  {{ macros.m_tab_head_start() }}
+    {{ macros.m_tab_head('basic', '기본', true) }}
+    {{ macros.m_tab_head('db', 'DB', false) }}
+    {{ macros.m_tab_head('auto', '자동 & 기타', false) }}
+  {{ macros.m_tab_head_end() }}
+</nav> 
+
+<form id='setting'>
+  <div class="tab-content" id="nav-tabContent">
+    {{ macros.m_tab_content_start('basic', true) }}
+      {{ macros.setting_input_text('bot_vod_target_cid', '타겟 ROOT CID', value=arg['bot_vod_target_cid'], desc=None) }}
+      {{ macros.setting_input_text('bot_vod_target_folder_format', '폴더 구조', value=arg['bot_vod_target_folder_format'], desc=["예: {GENRE}/{TITLE} ({YEAR})", "가능 값 : {GENRE} {TITLE} {YEAR} {MONTH} {DAY}", "빈값인 경우 CID에 복사"]) }}
+      {{ macros.setting_checkbox('bot_vod_use_notify', '알림 사용', value=arg['bot_vod_use_notify'], desc=['메시지 ID : tool_115_bot_vod']) }}
+      {{ macros.setting_radio_with_value('bot_vod_download_mode', '다운로드 모드', [['none', '다운로드 안함'], ['blacklist', '블랙리스트'], ['whitelist', '화이트리스트']], value=arg['bot_vod_download_mode']) }}
+      <div id="blacklist_div" class="collapse">
+      {{ macros.setting_input_textarea('bot_vod_blacklist_genre', '제외 장르', value=arg['bot_vod_blacklist_genre'], row=3, desc=['빈칸인 경우 검사하지 않습니다. 구분자 | or 엔터']) }}
+      {{ macros.setting_input_textarea('bot_vod_blacklist_program', '제외 프로그램', value=arg['bot_vod_blacklist_program'], row=10, desc=['이 곳에 있는 항목이 프로그램에 이름에 포함되어 있으면 다운로드 하지 않습니다. 구분자 | or 엔터']) }}
+      </div>
+      <div id="whitelist_div" class="collapse">
+      {{ macros.setting_input_textarea('bot_vod_whitelist_genre', '포함 장르', value=arg['bot_vod_whitelist_genre'], row=3, desc=['빈칸인 경우 검사하지 않습니다. 구분자 | or 엔터']) }}
+      {{ macros.setting_input_textarea('bot_vod_whitelist_program', '포함 프로그램', value=arg['bot_vod_whitelist_program'], row=10, desc=['이 곳에 있는 항목이 프로그램에 이름에 포함되어 있으면 다운로드합니다. 구분자 | or 엔터']) }}
+      </div>
+    {{ macros.m_tab_content_end() }} 
+    
+    {{ macros.m_tab_content_start('db', false) }}
+      {{ macros.setting_input_text_and_buttons('bot_vod_db_delete_day', 'DB 삭제 기간', [['globalDbDeleteDayBtn', '기간 적용 삭제', [['tag_id','bot_vod_db_delete_day']]], ['globalDbDeleteBtn', '전체 삭제']], value=arg['bot_vod_db_delete_day'], col='6') }} 
+      {{ macros.setting_checkbox('bot_vod_db_auto_delete', 'DB 자동 삭제', value=arg['bot_vod_db_auto_delete'], desc=['On : 기간 적용하여 DB를 자동 삭제합니다.']) }}
+    {{ macros.m_tab_content_end() }} 
+
+    {{ macros.m_tab_content_start('auto', false) }}
+      {{ macros.global_setting_scheduler_button(arg['is_include'], arg['is_running']) }}
+      {{ macros.setting_input_text('bot_vod_interval', '스케쥴링 실행 정보', value=arg['bot_vod_interval'], col='3', desc=['Inverval(minute 단위)이나 Cron 설정']) }}
+      {{ macros.setting_checkbox('bot_vod_auto_start', '시작시 자동실행', value=arg['bot_vod_auto_start'], desc='On : 시작시 자동으로 스케쥴러에 등록됩니다.') }}
+    {{ macros.m_tab_content_end() }}
+
+
+</form>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  set_vod_download_mode($("input[name='bot_vod_download_mode']:checked").val());
+});
+
+$('input[type=radio][name=bot_vod_download_mode]').change(function() {
+  set_vod_download_mode(this.value);
+});
+
+function set_vod_download_mode(type) {
+  $('input[name=bot_vod_download_mode][value="' + type + '"]').attr('checked', true);
+  if ( type == 'blacklist') {
+    $('#blacklist_div').collapse('show');
+    $('#whitelist_div').collapse('hide');
+  } else if ( type == 'whitelist') {
+    $('#blacklist_div').collapse('hide');
+    $('#whitelist_div').collapse('show');
+  } else {
+    $('#blacklist_div').collapse('hide');
+    $('#whitelist_div').collapse('hide');
+  }
+}
+
+</script>    
+{% endblock %}
+

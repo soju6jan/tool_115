@@ -1,0 +1,37 @@
+initupload的链接是：https://uplb.115.com/4.0/initupload.php?k_ec=pLrMwDK0u0OoufVLDHFKucq5ubkGOIPfgr6drFc2topzC/HnoADOh4aHh4dTJxdA
+2024/05/08 04:32:15 sig的值是：CC105325A66C9D657DD6D657928E2D2C30CCD25A
+2024/05/08 04:32:15 token的值是：dccb5ca108947c53ec49b43d6cd51ace
+2024/05/08 04:32:15 k_ec的值是：pLrMwDK0u0OoufVLDHFKucq5ubkGOIPfgr6drFc2topzC/HnoADOh4aHh4dTJxdA
+2024/05/08 04:32:16 秒传模式上传文件 /content/drive/Shareddrives/구드공 소스 - AV1/AV1/MP/자막/A/AAD/AAD-016/aad-016 [AAD-016(5.7GB)].mp4 的响应体的内容是：
+{"request":"upload","status":7,"statuscode":701,"statusmsg":"sig invalid","pickcode":"","target":"U_1_2894860007147306183","version":"4.0","sign_key":"73738544d206c92df80f14b8f4e3d3d0","sign_check":"1396952923-1397085605"}
+2024/05/08 04:32:16 initupload的链接是：https://uplb.115.com/4.0/initupload.php?k_ec=38G3u0nPwDjTwo4wdwoxwrHCwsICQ/ikka2Ov0QlpZlgGOL0sxPdlJWUlJTbizoa
+2024/05/08 04:32:16 sig的值是：CC105325A66C9D657DD6D657928E2D2C30CCD25A
+2024/05/08 04:32:16 token的值是：8661953d4f68236ec0cf207e9616f67c
+2024/05/08 04:32:16 k_ec的值是：38G3u0nPwDjTwo4wdwoxwrHCwsICQ/ikka2Ov0QlpZlgGOL0sxPdlJWUlJTbizoa
+2024/05/08 04:32:17 秒传模式上传文件 /content/drive/Shareddrives/구드공 소스 - AV1/AV1/MP/자막/A/AAD/AAD-016/aad-016 [AAD-016(5.7GB)].mp4 的响应体的内容是：
+{"request":"upload","status":2,"statuscode":0,"statusmsg":"","pickcode":"bbgfra9kovy2783g4","target":"","version":"4.0","fileid":0,"fileinfo":""}
+2024/05/08 04:32:17 秒传模式上传 /content/drive/Shareddrives/구드공 소스 - AV1/AV1/MP/자막/A/AAD/AAD-016/aad-016 [AAD-016(5.7GB)].mp4 成功
+
+
+form := url.Values{}
+	form.Set("appid", "0")
+	form.Set("appversion", appVer)
+	form.Set("userid", userID)
+	form.Set("filename", filename)
+	form.Set("filesize", fileSize)
+	form.Set("fileid", fileID)
+	form.Set("target", target)
+	form.Set("sig", sig)
+	form.Set("t", strconv.FormatInt(t, 10))
+	form.Set("token", token)
+	if signKey != "" && signVal != "" {
+		form.Set("sign_key", signKey)
+		form.Set("sign_val", signVal)
+	}
+
+    
+
+File: File(is_dir=False, name=aad-016 [AAD-016(5.7GB)].mp4, modified_time=2024-05-08 03:32:17+08:00, file_id=2894861119107628918, parent_id=2894860007147306183, size=6093602729, sha1=D1286F28CE2520A18EC8647CBD04DC93033B1BC2, pickcode=bbgfra9kovy2783g4)
+
+
+'5689341790-5689471602'
