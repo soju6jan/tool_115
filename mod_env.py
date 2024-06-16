@@ -1,6 +1,8 @@
-from .setup import *
 import py115
-from .util import Util
+
+from .setup import *
+from .task_bot_vod import TaskBotVod
+
 
 class ModuleEnv(PluginModuleBase):
 
@@ -16,7 +18,7 @@ class ModuleEnv(PluginModuleBase):
         if command == 'test':
             try:
                 P.ModelSetting.set('env_cookie', arg1)
-                storage = Util.init_storage(arg1)
+                storage = TaskBotVod.init_storage(arg1)
                 data = storage.list('0')
                 ret['json'] = {
                     "ROOT 목록": [x.name for x in data]

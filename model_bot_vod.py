@@ -134,3 +134,9 @@ class ModelBotVodItem(ModelBase):
     def set_status(self, status):
         self.status = status
         self.save()
+        if self.download_count == 0 and P.ModelSetting.get_bool(f'bot_vod_use_notify'):
+            from tool import ToolNotify
+            msg = f'115 BOT VOD\n파일: {self.filename}\n상태: {self.status}'
+            ToolNotify.send_message(msg, image_url=self.meta_poster, message_id=f"{P.package_name}_bot_vod")
+
+            

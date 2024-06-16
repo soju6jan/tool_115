@@ -1,12 +1,14 @@
-from .setup import *
-from .model_bot_vod import ModelBotVodItem
-from .util import Util
-
 import hashlib
 import io
 
+import py115
+
+from .model_bot_vod import ModelBotVodItem
+from .setup import *
+
 
 class TaskBotVod:
+    items_cid_map = {}
 
     @staticmethod
     @F.celery.task
@@ -24,7 +26,7 @@ class TaskBotVod:
         
         #while True:
         
-        storage = Util.init_storage(P.ModelSetting.get('env_cookie'))
+        storage = TaskBotVod.init_storage(P.ModelSetting.get('env_cookie'))
         vod_blacklist_genre = P.ModelSetting.get_list('bot_vod_blacklist_genre', '|')
         vod_blacklist_program = P.ModelSetting.get_list('bot_vod_blacklist_program', '|')
         vod_whitelist_genre = P.ModelSetting.get_list('bot_vod_whitelist_genre', '|')
@@ -91,17 +93,12 @@ class TaskBotVod:
         logger.info(db_item)
         db_item.request_time = datetime.now()
         if storage == None:
-            storage = Util.init_storage(P.ModelSetting.get('env_cookie'))
+            storage = TaskBotVod.init_storage(P.ModelSetting.get('env_cookie'))
         cid = TaskBotVod.get_cid(db_item, storage)
         result = storage.request_hash_soju(cid, db_item.filename, db_item.size, db_item.sha1, db_item.id, TaskBotVod.callback_sign_val)
         if result != None and result.is_done:
             db_item.completed_time = datetime.now()
             db_item.set_status('FINISH_DOWNLOAD')
-
-            #if P.ModelSetting.get_bool(f'{self.name}_use_notify'):
-            #    from tool import ToolNotify
-            #    msg = f'115 BOT VOD 수신\n파일: {item.filename}'
-            #    ToolNotify.send_message(msg, image_url=item.meta_poster, message_id=f"{P.package_name}_{self.name}")
 
             
             return True
@@ -132,15 +129,68 @@ class TaskBotVod:
     def get_cid(db_item, storage):
         cid = P.ModelSetting.get('bot_vod_target_cid')
         
-        #form = P.ModelSetting.get('bot_vod_target_folder_format')
-        #if form.strip() == "":
-        #    return cid
-        #else:
+        now = datetime.now()
+        now.strftime('%Y-%m-%d')
+
+        folder_format = {
+            'GENRE': db_item.meta_genre,
+            'TITLE': db_item.meta_title,
+            'YEAR': now.strftime('%Y'), 
+            'MONTH': now.strftime('%m'), 
+            'DAY': now.strftime('%d'), 
+        }
+        target_format = P.ModelSetting.get('bot_vod_target_folder_format').strip('/')
+        target = target_format.format(**folder_format)
+
+        return TaskBotVod.mkdir(storage, target, cid)
 
 
-        
-        return cid
+    def mkdir(storage, path, current_cid="0", retry=True):
+        try:
+            tmps = path.strip('/').split('/')
+            if len(tmps) == 1 and tmps[0] == "":
+                return current_cid
+            logger.debug(tmps)
+            for current in tmps:
+                items = TaskBotVod.get_list_cid(storage, current_cid, True)
+                find = TaskBotVod.find_in_cid(storage, items, current)
+                if find == None:
+                    find = storage.make_dir(current_cid, current)
+                current_cid = find.file_id
+            return current_cid
+        except Exception as e: 
+            logger.error(f"Exception:{str(e)}")
+            logger.error(traceback.format_exc())
+            logger.error("RETRY!!!")
+            if retry:
+                time.sleep(5)
+                return TaskBotVod.mkdir(storage, path, current_cid, retry=False)
+
     
+    #@pt
+    def get_list_cid(storage, target_cid, refresh=False):
+        logger.debug(f"115 list: {target_cid}")
+        if target_cid not in TaskBotVod.items_cid_map or refresh:
+            #items_cid = sorted(self.storage.list(target_cid))
+            items_cid = list(storage.list(target_cid))
+            TaskBotVod.items_cid_map[target_cid] = items_cid
+        return TaskBotVod.items_cid_map[target_cid]
 
+       
+    def find_in_cid(storage, parent_items, name, is_dir=True):
+        for item in parent_items:
+            if item.name == name and is_dir == is_dir:
+                return item
 
-
+    
+    
+    def init_storage(cookie):
+        if cookie == None or cookie == '':
+            return
+        uid = re.search('UID=([^;]+)', cookie).group(1)
+        cid = re.search('CID=([^;]+)', cookie).group(1)
+        seid = re.search('SEID=([^;]+)', cookie).group(1)
+        cloud = py115.connect(credential={
+            'UID':uid, 'CID':cid, 'SEID':seid
+        })
+        return cloud.storage()

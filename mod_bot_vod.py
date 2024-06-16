@@ -1,6 +1,7 @@
-from .setup import *
 from .model_bot_vod import ModelBotVodItem
+from .setup import *
 from .task_bot_vod import TaskBotVod
+
 
 class ModuleBotVod(PluginModuleBase):
 
@@ -8,10 +9,10 @@ class ModuleBotVod(PluginModuleBase):
         super(ModuleBotVod, self).__init__(P, name='bot_vod', first_menu='list')
         self.db_default = {
             f'{self.name}_db_version' : '1',
-            f'{self.name}_interval' : '1',
-            f'{self.name}_auto_start' : 'True',
+            f'{self.name}_interval' : '5',
+            f'{self.name}_auto_start' : 'False',
             f'{self.name}_target_cid' : '0',
-            f'{self.name}_target_folder_format' : '{GENRE}/{TITLE}',
+            f'{self.name}_target_folder_format' : '{GENRE}/{TITLE} ({YEAR})',
             f'{self.name}_download_mode' : 'none',
             f'{self.name}_blacklist_genre' : '',
             f'{self.name}_blacklist_program' : '',

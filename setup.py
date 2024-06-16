@@ -11,12 +11,12 @@ setting = {
                 'uri': 'env',
                 'name': '설정',
                 'list': [
-                    {'uri': 'setting', 'name': '설정'},
+                    {'uri': 'setting', 'name': 'Cookie'},
                 ]
             },
             {
                 'uri': 'bot_vod',
-                'name': 'VOD',
+                'name': 'BOT VOD',
                 'list': [
                     {'uri': 'setting', 'name': '설정'},
                     {'uri': 'list', 'name': '목록'},
@@ -46,8 +46,8 @@ from plugin import *
 P = create_plugin_instance(setting)
 
 try:
-    from .mod_env import ModuleEnv
     from .mod_bot_vod import ModuleBotVod
+    from .mod_env import ModuleEnv
     P.set_module_list([ModuleEnv, ModuleBotVod])
 except Exception as e:
     P.logger.error(f'Exception:{str(e)}')

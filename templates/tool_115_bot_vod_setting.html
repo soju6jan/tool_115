@@ -17,7 +17,7 @@
   <div class="tab-content" id="nav-tabContent">
     {{ macros.m_tab_content_start('basic', true) }}
       {{ macros.setting_input_text('bot_vod_target_cid', '타겟 ROOT CID', value=arg['bot_vod_target_cid'], desc=None) }}
-      {{ macros.setting_input_text('bot_vod_target_folder_format', '폴더 구조', value=arg['bot_vod_target_folder_format'], desc=["예: {GENRE}/{TITLE} ({YEAR})", "가능 값 : {GENRE} {TITLE} {YEAR} {MONTH} {DAY}", "빈값인 경우 CID에 복사"]) }}
+      {{ macros.setting_input_text('bot_vod_target_folder_format', '폴더 구조', value=arg['bot_vod_target_folder_format'], desc=["예: {GENRE}/{TITLE} ({YEAR})", "가능 값 (날짜는 now값) : {GENRE} {TITLE} {YEAR} {MONTH} {DAY}", "빈값인 경우 CID에 복사"]) }}
       {{ macros.setting_checkbox('bot_vod_use_notify', '알림 사용', value=arg['bot_vod_use_notify'], desc=['메시지 ID : tool_115_bot_vod']) }}
       {{ macros.setting_radio_with_value('bot_vod_download_mode', '다운로드 모드', [['none', '다운로드 안함'], ['blacklist', '블랙리스트'], ['whitelist', '화이트리스트']], value=arg['bot_vod_download_mode']) }}
       <div id="blacklist_div" class="collapse">
