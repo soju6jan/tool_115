@@ -2,12 +2,10 @@ __author__ = 'deadblue'
 
 from typing import Any, Dict, Union
 
-from py115._internal.protocol.client import Client
-from py115._internal.api import app, qrcode, upload
-
 from py115 import services
+from py115._internal.api import app, qrcode, upload
+from py115._internal.protocol.client import Client
 from py115.types import Credential, LoginTarget, QrcodeSession, QrcodeStatus
-
 
 _app_names = [
     'web', 'mac', 'linux', 'windows'
@@ -36,7 +34,8 @@ class Cloud:
         protocol_kwargs = protocol_kwargs or {}
         self._client = Client(**protocol_kwargs)
         # Get latest app version
-        self._app_ver = self._client.execute_api(app.GetVersionApi())
+        #self._app_ver = self._client.execute_api(app.GetVersionApi())
+        self._app_ver = "30.5.1"
         self._client.setup_user_agent(
             app_version=self._app_ver
         )
