@@ -35,7 +35,7 @@ class Cloud:
         self._client = Client(**protocol_kwargs)
         # Get latest app version
         #self._app_ver = self._client.execute_api(app.GetVersionApi())
-        self._app_ver = "30.5.1"
+        self._app_ver = "27.0.3.7"
         self._client.setup_user_agent(
             app_version=self._app_ver
         )

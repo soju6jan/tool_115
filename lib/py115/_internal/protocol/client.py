@@ -72,7 +72,7 @@ class Client:
         return cookie_dict
 
     def setup_user_agent(self, app_version: str):
-        self._user_agent = 'Mozilla/5.0 115Desktop/%s' % app_version
+        self._user_agent = 'Mozilla/5.0 115Browser/%s' % app_version
         self._session.headers.update({
             'User-Agent': self._user_agent
         })
